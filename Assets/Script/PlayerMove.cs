@@ -2,13 +2,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-
 // キーを押したら、移動する（重力でジャンプ）
 public class PlayerMove : MonoBehaviour
 {
     //-------------------------------
-    public float speed = 5f;
-    public float jumppower = 8f;
+    public float speed = 3f;
+    public float jumpPower = 2f;
     public float checkDistance = 0.1f;
     public float footOffset = 0.01f;
     //--------------------------------
@@ -25,6 +24,7 @@ public class PlayerMove : MonoBehaviour
     {
         rbody = GetComponent<Rigidbody2D>();
         rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
     }
@@ -32,13 +32,17 @@ public class PlayerMove : MonoBehaviour
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
+
         // 移動方向にキャラを向ける
-        if (moveInput.x != 0) sr.flipX = moveInput.x < 0;
+        if (moveInput.x != 0)
+            sr.flipX = moveInput.x < 0;
     }
 
     public void OnJump()
     {
-        if (isGrounded && !isJumping)   jumpRequested = true;
+        // 地面についていて、ジャンプしていないときだけジャンプのリクエストを受け付ける。
+        if (isGrounded && !isJumping)
+            jumpRequested = true;
     }
 
     void Update()
@@ -47,11 +51,19 @@ public class PlayerMove : MonoBehaviour
         float myHeight = col.bounds.extents.y;
         float footy = transform.position.y - myHeight - footOffset;
         Vector2 startRay = new Vector2(transform.position.x, footy);
-        isGrounded = Physics2D.Raycast(startRay, Vector2.down, checkDistance);
 
-        // ジャンプ中かどうかを更新
-        if (rbody.linearVelocity.y <= 0)  isJumping = false;
-    }
+        //
+        isGrounded = Physics2D.Raycast(
+            startRay, 
+            Vector2.down, 
+            checkDistance, 
+            LayerMask.GetMask("Ground")
+        );
+
+        // ジャンプ中かどうかを更新（落下し始めたらジャンプ終了）
+        if (rbody.linearVelocity.y <= 0)
+            isJumping = false;
+        }
 
     void FixedUpdate()
     {
@@ -64,7 +76,7 @@ public class PlayerMove : MonoBehaviour
         {
             jumpRequested = false;
             isJumping = true;
-            rbody.AddForce(Vector2.up * jumppower, ForceMode2D.Impulse);   
+            rbody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
     }
 }
