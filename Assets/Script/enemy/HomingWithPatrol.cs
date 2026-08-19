@@ -15,6 +15,7 @@ public class HomingWithPatrol : MonoBehaviour
     [SerializeField] private float patrolSpeed = 2f;    // パトロール時のスピード
     [SerializeField] private float waypointReachThreshold = 0.2f;   // ウェイポイントに到達したと判断する距離
     [SerializeField] private bool loopWaypoints = true;     // 全てのウェイポイントに到達したときにループするか
+    [SerializeField] private Sprite patrolSprite;
 
     [Header("Homing")]
     [SerializeField] private float homingSpeed = 3f;    // ホーミング時のスピード
@@ -22,6 +23,7 @@ public class HomingWithPatrol : MonoBehaviour
     [SerializeField] private float detectionRange = 5f;   // 追跡開始距離
     [SerializeField] private float loseRange = 7f;        // 追跡解除距離（detectionRangeより大きめに）
     [SerializeField] private float flipDeadzone = 0.15f;  // 向き切替無効距離
+    [SerializeField] private Sprite homingSprite;
     
     [Header("Pause Before Homing")]
     [SerializeField] private float pauseDuration = 0.6f; // ホーミング開始前に立ち止まる時間
@@ -101,7 +103,15 @@ public class HomingWithPatrol : MonoBehaviour
             DoPatrol();
         else
             DoHoming();
+
+        UpdateAppearance();
     }
+
+    private void UpdateAppearance()
+    {
+        sr.sprite = (state == State.Patrol) ? patrolSprite : homingSprite;
+    }
+
 
     // Pause 開始
     private void StartPauseBeforeHoming()
@@ -124,7 +134,7 @@ public class HomingWithPatrol : MonoBehaviour
     // Pause 更新
     private void UpdatePause(float distanceToTarget)
     {
-        // ターゲットが遠くなったらキャンセルして Patrol に戻る
+        // ターゲットが遠くなったらキャンセルしてPatrolに戻る
         if (distanceToTarget > loseRange)
         {
             isPausing = false;
