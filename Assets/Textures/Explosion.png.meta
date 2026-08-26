@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2bfb8b35eb9d22c4aa8b30e9e62987f7
+guid: e0b04ba744acfc6449f3c8ff198a678d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8029441800329081725
-    second: Dinosaur_2_0
+      213: 5986030973748356752
+    second: Explosion_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 48
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Dinosaur_2_0
+      name: Explosion_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 0
-        width: 44
-        height: 48
+        width: 28
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d73b94d86ce4e6f60800000000000000
-      internalID: 8029441800329081725
+      spriteID: 096a1cc8477a21350800000000000000
+      internalID: 5986030973748356752
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Dinosaur_2_0: 8029441800329081725
+      Explosion_0: 5986030973748356752
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

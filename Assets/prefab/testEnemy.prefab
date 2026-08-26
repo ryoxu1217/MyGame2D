@@ -166,8 +166,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.3}
-  m_Size: {x: 0.4, y: 0.0001}
+  m_Offset: {x: 0, y: -0.27}
+  m_Size: {x: 0.4, y: 0.1}
   m_Direction: 0
 --- !u!50 &2843278624979258423
 Rigidbody2D:
@@ -214,13 +214,13 @@ MonoBehaviour:
   patrolSpeed: 2
   waypointReachThreshold: 0.2
   loopWaypoints: 1
-  patrolSprite: {fileID: 21300000, guid: 2bfb8b35eb9d22c4aa8b30e9e62987f7, type: 3}
+  patrolSprite: {fileID: 21300000, guid: a6a8b69c903f0c644b07e894fd8ae5ab, type: 3}
   homingSpeed: 3.5
   climbSpeed: 2
   detectionRange: 5
   loseRange: 7
   flipDeadzone: 0.15
-  homingSprite: {fileID: 21300000, guid: 9b782f2780dd3464b8332c8c1f2bcf7b, type: 3}
+  homingSprite: {fileID: 21300000, guid: c8414630b77019e4caab9dcc557f337c, type: 3}
   pauseDuration: 0.6
   groundLayer:
     serializedVersion: 2

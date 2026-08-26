@@ -4,7 +4,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))] // Rigidbody2DとSpriteRendererが必ず存在することを保証
 public class HomingWithPatrol : MonoBehaviour
 {
-    public enum State { Patrol, Homing } // enum = 始めに指定した型のみを入れることが可能。今回はPatrolとHoming。
+    public enum State { Patrol, Pause, Homing } // enum = 始めに指定した型のみを入れることが可能。
 
     [Header("Target")]
     [SerializeField] private Transform target;  // 追跡のターゲット
@@ -43,7 +43,6 @@ public class HomingWithPatrol : MonoBehaviour
     
 
     // Pause 用
-    private bool isPausing = false;
     private float pauseTimer = 0f;
 
     void Awake()
@@ -77,7 +76,7 @@ public class HomingWithPatrol : MonoBehaviour
         // 状態遷移と Pause トリガー
         if (state == State.Patrol)
         {
-            if (!isPausing && distanceToTarget <= detectionRange)
+            if (state == State.Patrol && distanceToTarget <= detectionRange)
             {
                 // Patrol -> ホーミングに移る前に一時停止する
                 StartPauseBeforeHoming();
@@ -91,18 +90,13 @@ public class HomingWithPatrol : MonoBehaviour
             }
         }
 
-        // Pause 中の処理（優先）
-        if (isPausing)
-        {
-            UpdatePause(distanceToTarget);
-            return; // Pause 中は他の行動をしない
-        }
-
         // 通常の状態ごとの挙動
-        if (state == State.Patrol)
-            DoPatrol();
-        else
-            DoHoming();
+        switch(state)
+        {
+            case State.Patrol: DoPatrol(); break;
+            case State.Pause: UpdatePause(distanceToTarget); break;
+            case State.Homing: DoHoming(); break;
+        }
 
         UpdateAppearance();
     }
@@ -116,7 +110,7 @@ public class HomingWithPatrol : MonoBehaviour
     // Pause 開始
     private void StartPauseBeforeHoming()
     {
-        isPausing = true;
+        state = State.Pause;
         pauseTimer = pauseDuration;
 
         // 横方向の速度を止める（縦は保持）
@@ -137,7 +131,6 @@ public class HomingWithPatrol : MonoBehaviour
         // ターゲットが遠くなったらキャンセルしてPatrolに戻る
         if (distanceToTarget > loseRange)
         {
-            isPausing = false;
             state = State.Patrol;
             return;
         }
@@ -145,7 +138,6 @@ public class HomingWithPatrol : MonoBehaviour
         pauseTimer -= Time.fixedDeltaTime;
         if (pauseTimer <= 0f)
         {
-            isPausing = false;
             state = State.Homing;
             // ホーミング開始時に縦速度はそのまま、横速度はホーミング速度にする
             float moveX = lastTargetIsRight ? homingSpeed : -homingSpeed;

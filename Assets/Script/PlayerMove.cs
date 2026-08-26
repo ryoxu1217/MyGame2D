@@ -7,7 +7,7 @@ public class PlayerMove : MonoBehaviour
 {
     //-------------------------------
     public float speed = 4f;
-    public float jumpPower = 2f;
+    public float jumpPower = 5f;
     public float checkDistance = 0.1f;
     public float footOffset = 0.01f;
     //--------------------------------
