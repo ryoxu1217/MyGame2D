@@ -4,11 +4,12 @@ using UnityEngine;
 public class MonsterSpawnerDistance : MonoBehaviour
 {
     public GameObject summonEffectPrefab; // 召喚エフェクト
-    public GameObject monsterPrefab;   // 出したいモンスター
-    public float spawnDistance = 9f;   // プレイヤーがこの距離まで来たら発動
-    public Transform player;           // プレイヤーの Transform
-    public float summonDelay = 0.5f;      // 召喚演出後にモンスターが出るまでの時間
-    public float interval = 12f; // 何秒ごとに出すか
+    public GameObject monsterPrefab;      // 出したいモンスター
+    public float spawnDistance = 9f;      // プレイヤーがこの距離まで来たら発動
+    public Transform player;              // プレイヤーの Transform
+    public float summonDelay = 0.6f;      // 召喚演出後にモンスターが出るまでの時間
+    public float interval = 12f;          // 何秒ごとに出すか
+    public Vector2 spawnPosition;         // 召喚位置
 
     private float timer = 0f;
     
@@ -23,7 +24,7 @@ public class MonsterSpawnerDistance : MonoBehaviour
             
 
         // プレイヤーとの距離を計算
-        float dist = Vector2.Distance(transform.position, player.position);
+        float dist = Vector2.Distance(spawnPosition, player.position);
 
         // 一定距離以内に入ったらモンスター生成
         if (dist <= spawnDistance && timer >= interval)
@@ -35,12 +36,29 @@ public class MonsterSpawnerDistance : MonoBehaviour
     private System.Collections.IEnumerator SpawnSequence()
     {
         // ① 召喚エフェクト生成
-        Instantiate(summonEffectPrefab, transform.position, Quaternion.identity);
+        Instantiate(
+            summonEffectPrefab, 
+            new Vector3(spawnPosition.x, spawnPosition.y, -1f), 
+            Quaternion.identity);
 
         // ② 少し待つ
         yield return new WaitForSeconds(summonDelay);
 
         // ③ モンスター生成
-        Instantiate(monsterPrefab, transform.position, Quaternion.identity);
+        Instantiate(monsterPrefab, spawnPosition, Quaternion.identity);
+
     }
+
+    void OnDrawGizmos()
+    {
+        // 召喚範囲
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(spawnPosition, spawnDistance);
+
+        // 召喚位置
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(spawnPosition, 0.1f);
+
+    }
+
 }

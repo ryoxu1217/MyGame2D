@@ -1,67 +1,61 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))] // Rigidbody2DとSpriteRendererが必ず存在することを保証
+[RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class HomingWithPatrol : MonoBehaviour
 {
-    public enum State { Patrol, Pause, Homing } // enum = 始めに指定した型のみを入れることが可能。
+    public enum State { Patrol, Pause, Homing }
 
     [Header("Target")]
-    [SerializeField] private Transform target;  // 追跡のターゲット
-    [SerializeField] private string targetTag = "Player";   // フォールバック
+    [SerializeField] private Transform target;
+    [SerializeField] private string targetTag = "Player";
 
     [Header("Patrol")]
-    [SerializeField] private Transform[] waypoints;     // 空ならランダム徘徊
-    [SerializeField] private float patrolSpeed = 2f;    // パトロール時のスピード
-    [SerializeField] private float waypointReachThreshold = 0.2f;   // ウェイポイントに到達したと判断する距離
-    [SerializeField] private bool loopWaypoints = true;     // 全てのウェイポイントに到達したときにループするか
+    [SerializeField] private Transform[] waypoints;
+    [SerializeField] private float patrolSpeed = 2f;
+    [SerializeField] private float waypointReachThreshold = 0.2f;
+    [SerializeField] private bool loopWaypoints = true;
     [SerializeField] private Sprite patrolSprite;
 
     [Header("Homing")]
-    [SerializeField] private float homingSpeed = 3f;    // ホーミング時のスピード
-    [SerializeField] private float climbSpeed = 2f;     //段差を上がるスピード
-    [SerializeField] private float detectionRange = 5f;   // 追跡開始距離
-    [SerializeField] private float loseRange = 7f;        // 追跡解除距離（detectionRangeより大きめに）
-    [SerializeField] private float flipDeadzone = 0.15f;  // 向き切替無効距離
+    [SerializeField] private float homingSpeed = 3f;
+    [SerializeField] private float climbSpeed = 2f;
+    [SerializeField] private float detectionRange = 5f;
+    [SerializeField] private float loseRange = 7f;
+    [SerializeField] private float flipDeadzone = 0.15f;
     [SerializeField] private Sprite homingSprite;
-    
+
     [Header("Pause Before Homing")]
-    [SerializeField] private float pauseDuration = 0.6f; // ホーミング開始前に立ち止まる時間
+    [SerializeField] private float pauseDuration = 0.6f;
 
     [Header("Physics")]
-    [SerializeField] private LayerMask groundLayer = 1 << 3; // Groundレイヤーをセット
+    [SerializeField] private LayerMask groundLayer = 1 << 3;
 
-    // 内部
     private Rigidbody2D rb;
     private SpriteRenderer sr;
-    private State state = State.Patrol;    // 現在の状態
+    private State state = State.Patrol;
     private int currentWaypoint = 0;
-    private Vector2 randomDir = Vector2.right;  // ウェイポイントが無いときのランダム移動方向
-    private float randomMoveTimer = 0f;     // ランダム方向を切り替えるタイマー。
+    private Vector2 randomDir = Vector2.right;
+    private float randomMoveTimer = 0f;
     private float randomMoveInterval = 1.0f;
-    private bool lastTargetIsRight = true;  // 最後に向いていた方向（右向きかどうか）。
-    
+    private bool lastTargetIsRight = true;
 
-    // Pause 用
     private float pauseTimer = 0f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        if (rb != null) rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     void Start()
     {
-        // target が未割当ならタグで探す
         if (target == null && !string.IsNullOrEmpty(targetTag))
         {
             GameObject found = GameObject.FindWithTag(targetTag);
             if (found != null) target = found.transform;
         }
 
-        // waypoints が空ならランダム方向を初期化
         if (waypoints == null || waypoints.Length == 0)
         {
             randomDir = Random.value > 0.5f ? Vector2.right : Vector2.left;
@@ -73,25 +67,18 @@ public class HomingWithPatrol : MonoBehaviour
     {
         float distanceToTarget = target != null ? Vector2.Distance(transform.position, target.position) : Mathf.Infinity;
 
-        // 状態遷移と Pause トリガー
-        if (state == State.Patrol)
+        // Patrol → Pause
+        if (state == State.Patrol && distanceToTarget <= detectionRange)
         {
-            if (state == State.Patrol && distanceToTarget <= detectionRange)
-            {
-                // Patrol -> ホーミングに移る前に一時停止する
-                StartPauseBeforeHoming();
-            }
+            StartPauseBeforeHoming();
         }
-        else if (state == State.Homing)
+        // Homing → Patrol
+        else if (state == State.Homing && distanceToTarget > loseRange)
         {
-            if (distanceToTarget > loseRange)
-            {
-                state = State.Patrol;
-            }
+            state = State.Patrol;
         }
 
-        // 通常の状態ごとの挙動
-        switch(state)
+        switch (state)
         {
             case State.Patrol: DoPatrol(); break;
             case State.Pause: UpdatePause(distanceToTarget); break;
@@ -106,17 +93,13 @@ public class HomingWithPatrol : MonoBehaviour
         sr.sprite = (state == State.Patrol) ? patrolSprite : homingSprite;
     }
 
-
-    // Pause 開始
     private void StartPauseBeforeHoming()
     {
         state = State.Pause;
         pauseTimer = pauseDuration;
 
-        // 横方向の速度を止める（縦は保持）
         rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
-        // プレイヤーの方向を向く（瞬時に向ける）
         if (target != null)
         {
             float dx = target.position.x - transform.position.x;
@@ -125,10 +108,8 @@ public class HomingWithPatrol : MonoBehaviour
         }
     }
 
-    // Pause 更新
     private void UpdatePause(float distanceToTarget)
     {
-        // ターゲットが遠くなったらキャンセルしてPatrolに戻る
         if (distanceToTarget > loseRange)
         {
             state = State.Patrol;
@@ -139,34 +120,33 @@ public class HomingWithPatrol : MonoBehaviour
         if (pauseTimer <= 0f)
         {
             state = State.Homing;
-            // ホーミング開始時に縦速度はそのまま、横速度はホーミング速度にする
-            float moveX = lastTargetIsRight ? homingSpeed : -homingSpeed;
-            rb.linearVelocity = new Vector2(moveX, rb.linearVelocity.y);
+
+            rb.linearVelocity = new Vector2(
+                lastTargetIsRight ? homingSpeed : -homingSpeed,
+                rb.linearVelocity.y
+            );
         }
     }
 
-    // Patrol
     private void DoPatrol()
     {
         float vx = 0f;
+
         if (waypoints != null && waypoints.Length > 0)
         {
             Transform wp = waypoints[currentWaypoint];
-            Vector2 dir = (wp.position - transform.position);
+            Vector2 dir = wp.position - transform.position;
             float dist = dir.magnitude;
+
             if (dist <= waypointReachThreshold)
             {
                 currentWaypoint++;
                 if (currentWaypoint >= waypoints.Length)
-                {
-                    if (loopWaypoints) currentWaypoint = 0;
-                    else currentWaypoint = waypoints.Length - 1;
-                }
+                    currentWaypoint = loopWaypoints ? 0 : waypoints.Length - 1;
             }
             else
             {
-                Vector2 move = dir.normalized * patrolSpeed;
-                vx = move.x;
+                vx = dir.normalized.x * patrolSpeed;
             }
         }
         else
@@ -183,34 +163,63 @@ public class HomingWithPatrol : MonoBehaviour
         if (Mathf.Abs(vx) > 0.01f) lastTargetIsRight = vx > 0f;
         sr.flipX = !lastTargetIsRight;
 
-        float vy = rb.linearVelocity.y;
-        rb.linearVelocity = new Vector2(vx, vy);
+        rb.linearVelocity = new Vector2(vx, rb.linearVelocity.y);
     }
 
-    // Homing
     private void DoHoming()
     {
         if (target == null) return;
 
         float dx = target.position.x - transform.position.x;
-        float dy = target.position.y - transform.position.y;
-
         if (Mathf.Abs(dx) > flipDeadzone)
             lastTargetIsRight = dx > 0f;
 
         sr.flipX = !lastTargetIsRight;
 
         float moveX = lastTargetIsRight ? homingSpeed : -homingSpeed;
+        Vector2 dir = lastTargetIsRight ? Vector2.right : Vector2.left;
 
-        RaycastHit2D hit = Physics2D.Raycast(
-            transform.position + Vector3.down * 0.1f,
-            lastTargetIsRight ? Vector2.right : Vector2.left,
-            0.3f,
+        // 段差判定
+        float forwardDist = 0.3f;      // 前方の障害物検出距離
+        float stepMaxHeight = 0.4f;    // 登れる最大段差高さ
+
+        // 前方に障害物があるか
+        Vector2 footOrigin = (Vector2)transform.position + Vector2.down * 0.1f;
+        RaycastHit2D forwardHit = Physics2D.Raycast(
+            footOrigin,
+            dir,
+            forwardDist,
             groundLayer
         );
 
         float moveY = rb.linearVelocity.y;
-        if (hit.collider != null) moveY = climbSpeed;
+
+        if (forwardHit.collider != null)
+        {
+            // 障害物の上に足場があるか確認
+            Vector2 topCheckOrigin = forwardHit.point + Vector2.up * stepMaxHeight;
+            RaycastHit2D topHit = Physics2D.Raycast(
+                topCheckOrigin,
+                Vector2.down,
+                stepMaxHeight + 0.1f,
+                groundLayer
+            );
+
+            if (topHit.collider != null)
+            {
+                // 足場の高さ差が登れる範囲か
+                float topY = topHit.point.y;
+                float myFootY = transform.position.y - 0.1f; // 足元の高さ
+
+                float heightDiff = topY - myFootY;
+
+                if (heightDiff > 0f && heightDiff <= stepMaxHeight)
+                {
+                    // 段差と判断して登る
+                    moveY = climbSpeed;
+                }
+            }
+        }
 
         rb.linearVelocity = new Vector2(moveX, moveY);
     }
@@ -219,6 +228,7 @@ public class HomingWithPatrol : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, loseRange);
 
