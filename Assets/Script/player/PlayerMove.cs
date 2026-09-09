@@ -5,14 +5,13 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerMove : MonoBehaviour
 {
-    //-------------------------------
     public float speed = 4f;
     public float jumpPower = 6f;
     public float checkDistance = 0.05f;
     public float footOffset = 0.01f;
-    //--------------------------------
-    private Rigidbody2D    rbody;
-    private Collider2D     col;
+
+    private Rigidbody2D rbody;
+    private Collider2D col;
     private SpriteRenderer sr;
     private Animator anim;
 
@@ -35,11 +34,11 @@ public class PlayerMove : MonoBehaviour
     {
         moveInput = value.Get<Vector2>();
 
-        // 移動方向にキャラを向ける
+        // 左右向き
         if (moveInput.x != 0)
             sr.flipX = moveInput.x < 0;
 
-        // 歩きアニメの ON/OFF
+        // 歩きアニメ
         anim.SetBool("isWalk", moveInput.x != 0);
 
         if (!isGrounded || isJumping)
@@ -49,11 +48,9 @@ public class PlayerMove : MonoBehaviour
         {
             anim.SetBool("isFall", false);  
         }
-    }
 
-    public void OnJump()
-    {
-        if (isGrounded && !isJumping)
+        // 上キーでジャンプ要求
+        if (moveInput.y > 0 && isGrounded && !isJumping)
             jumpRequested = true;
     }
 
@@ -69,10 +66,9 @@ public class PlayerMove : MonoBehaviour
             Vector2.down,
             checkDistance,
             LayerMask.GetMask("Ground")
-        ); 
+        );
 
-        anim.SetBool("isFall", !isGrounded);  // ジャンプアニメのON / OFF
-
+        anim.SetBool("isFall", !isGrounded);
 
         // 落下し始めたらジャンプ終了
         if (rbody.linearVelocity.y <= 0)
@@ -81,7 +77,7 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 水平方向の速度設定
+        // 水平移動
         float vx = moveInput.x * speed;
         rbody.linearVelocity = new Vector2(vx, rbody.linearVelocity.y);
 
