@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 3010300332811200306}
   - component: {fileID: 2843278624979258423}
   - component: {fileID: 5432112959497292189}
-  m_Layer: 0
+  - component: {fileID: 4967496312383337970}
+  m_Layer: 6
   m_Name: testEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +195,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &5432112959497292189
 MonoBehaviour:
@@ -224,4 +225,20 @@ MonoBehaviour:
   pauseDuration: 0.6
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
+--- !u!114 &4967496312383337970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4039809437770019237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de1f7dca25367f041bc6cd3185304370, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageObject
+  damage: 1
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 128
