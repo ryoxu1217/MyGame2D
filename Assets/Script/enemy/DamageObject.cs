@@ -13,7 +13,6 @@ public class DamageObject : MonoBehaviour
             PlayerHealth hp = other.GetComponent<PlayerHealth>();
             if (hp != null)
             {
-                hp.TakeDamage(damage);
             }
         }
     }

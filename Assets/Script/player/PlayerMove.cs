@@ -10,7 +10,7 @@ public class PlayerMove : MonoBehaviour
     public float checkDistance = 0.05f;
     public float footOffset = 0.01f;
 
-    private Rigidbody2D rbody;
+    private Rigidbody2D rb;
     private Collider2D col;
     private SpriteRenderer sr;
     private Animator anim;
@@ -22,8 +22,8 @@ public class PlayerMove : MonoBehaviour
 
     void Awake()
     {
-        rbody = GetComponent<Rigidbody2D>();
-        rbody.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb = GetComponent<Rigidbody2D>();
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
@@ -71,7 +71,7 @@ public class PlayerMove : MonoBehaviour
         anim.SetBool("isFall", !isGrounded);
 
         // 落下し始めたらジャンプ終了
-        if (rbody.linearVelocity.y <= 0)
+        if (rb.linearVelocity.y <= 0)
             isJumping = false;
     }
 
@@ -79,14 +79,15 @@ public class PlayerMove : MonoBehaviour
     {
         // 水平移動
         float vx = moveInput.x * speed;
-        rbody.linearVelocity = new Vector2(vx, rbody.linearVelocity.y);
+        rb.linearVelocity = new Vector2(vx, rb.linearVelocity.y);
 
         // ジャンプ処理
         if (jumpRequested)
         {
             jumpRequested = false;
             isJumping = true;
-            rbody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); 
+            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
     }
 }

@@ -30,9 +30,9 @@ public class HeartHPUI : MonoBehaviour
         }
 
         // 新しいハートを maxHP の数だけ生成
-        hearts = new Image[playerHealth.maxHP];
+        hearts = new Image[playerHealth.MaxHP];
 
-        for (int i = 0; i < playerHealth.maxHP; i++)
+        for (int i = 0; i < playerHealth.MaxHP; i++)
         {
             GameObject h = Instantiate(heartPrefab, heartContainer);
             hearts[i] = h.GetComponent<Image>();
