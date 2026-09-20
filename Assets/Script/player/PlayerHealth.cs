@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int maxHP = 3;     // 最大HP
+    [SerializeField] private int maxHP = 20;     // 最大HP
     public int MaxHP => maxHP;  // maxHPの値を常に示す読み取り用変数
     public int CurrentHP { get; private set; }  // 書き換えれないが、値を使うことはできる
 
@@ -69,6 +69,6 @@ public class PlayerHealth : MonoBehaviour
 
     private void GameOver()
     {
-        Debug.Log("ゲームオーバー");
+        GameManager.Instance.OnPlayerDead();
     }
 }

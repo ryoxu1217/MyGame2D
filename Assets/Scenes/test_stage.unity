@@ -7474,8 +7474,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 400, y: -200}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &712567830
 MonoBehaviour:
@@ -7515,55 +7515,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712567828}
   m_CullTransparentMesh: 1
---- !u!1 &809716476
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 809716478}
-  - component: {fileID: 809716477}
-  m_Layer: 0
-  m_Name: HeartContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &809716477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 809716476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbab0478749989e4cbef7c07cfb25623, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeartHPUI
-  playerHealth: {fileID: 1637084242}
-  fullHeart: {fileID: 21300000, guid: 0f382915d7ad361419c491a3117d0b6a, type: 3}
-  emptyHeart: {fileID: 21300000, guid: ff39f166ddae2854c9cd8bd12be81f1a, type: 3}
-  heartPrefab: {fileID: 8003302890871821419, guid: 7d07738ee737f36488706c0af0bc9fbb, type: 3}
-  heartContainer: {fileID: 809716478}
---- !u!4 &809716478
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 809716476}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.05952, y: -5.37869, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &858605801
 GameObject:
   m_ObjectHideFlags: 0
@@ -7686,6 +7637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a36f7f520143064ca550663d91f039d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  gameoverScene: GameOver
 --- !u!4 &1021388689
 Transform:
   m_ObjectHideFlags: 0
@@ -7969,8 +7921,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 400, y: -200}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1156483870
 MonoBehaviour:
@@ -8842,7 +8794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5ea1e9d181e094c95f3f2f582634dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHP: 40
+  maxHP: 2
   invincibleTime: 0.2
   knockbackForce: 5
 --- !u!1 &1687453404
@@ -9075,5 +9027,4 @@ SceneRoots:
   - {fileID: 1687453406}
   - {fileID: 1637084234}
   - {fileID: 1037627949}
-  - {fileID: 809716478}
   - {fileID: 1154813420}
