@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
 
     public void OnPlayerDead()
     {
+        DeathSystem();
+    }
+
+    private void DeathSystem()
+    {
         // GAMEOVER シーンへ移動
         SceneManager.LoadScene(gameoverScene);
     }

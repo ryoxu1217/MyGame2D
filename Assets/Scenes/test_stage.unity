@@ -8532,6 +8532,7 @@ GameObject:
   - component: {fileID: 1637084240}
   - component: {fileID: 1637084241}
   - component: {fileID: 1637084242}
+  - component: {fileID: 1637084243}
   m_Layer: 7
   m_Name: Egg
   m_TagString: Player
@@ -8797,6 +8798,19 @@ MonoBehaviour:
   maxHP: 2
   invincibleTime: 0.2
   knockbackForce: 5
+--- !u!114 &1637084243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637084230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f088dd0fddf41944ae8c49c3fd1e0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFallChecker
+  deathY: -10
 --- !u!1 &1687453404
 GameObject:
   m_ObjectHideFlags: 0
