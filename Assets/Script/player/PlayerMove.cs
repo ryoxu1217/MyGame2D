@@ -5,10 +5,12 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 4f;
+    public float speed = 5f;
     public float jumpPower = 6f;
-    public float checkDistance = 0.05f;
-    public float footOffset = 0.01f;
+    [SerializeField] private float checkDistance = 0.05f;
+    [SerializeField] private float footOffset = 0.01f;
+
+    public bool playerCanMove = true;
 
     private Rigidbody2D rb;
     private Collider2D col;
@@ -32,6 +34,9 @@ public class PlayerMove : MonoBehaviour
 
     public void OnMove(InputValue value)
     {
+        // 操作可能かどうか判定
+        if (!playerCanMove) return;
+
         moveInput = value.Get<Vector2>();
 
         // 左右向き
@@ -56,6 +61,9 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        // 操作可能かどうか判定
+        if (!playerCanMove) return;
+        
         // 地面判定
         float myHeight = col.bounds.extents.y;
         float footy = transform.position.y - myHeight - footOffset;
@@ -77,9 +85,15 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
+        // 操作可能かどうか判定
+        if (!playerCanMove) return;
+ 
         // 水平移動
-        float vx = moveInput.x * speed;
-        rb.linearVelocity = new Vector2(vx, rb.linearVelocity.y);
+        if (moveInput.x != 0)
+        {
+            float vx = moveInput.x * speed;
+            rb.linearVelocity = new Vector2(vx, rb.linearVelocity.y);
+        }
 
         // ジャンプ処理
         if (jumpRequested)

@@ -7440,6 +7440,81 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &621804406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 621804407}
+  - component: {fileID: 621804409}
+  - component: {fileID: 621804408}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &621804407
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621804406}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1154813420}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 400, y: -200}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &621804408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621804406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: b1ca2ab29fe59f64c90753e9b1a23515, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &621804409
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621804406}
+  m_CullTransparentMesh: 1
 --- !u!1 &712567828
 GameObject:
   m_ObjectHideFlags: 0
@@ -7687,23 +7762,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthController
   healthGaugeImage: {fileID: 1156483870}
   playerHealth: {fileID: 1637084242}
-  damageAction:
-    m_Name: Damage
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: efe1c28b-554d-42ef-81f2-e2b7398ddf36
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: d3a1463f-3959-472a-a653-98211ec49c88
-      m_Path: <Keyboard>/space
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Damage
-      m_Flags: 0
-    m_Flags: 1
 --- !u!1 &1037627946
 GameObject:
   m_ObjectHideFlags: 0
@@ -7878,6 +7936,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 621804407}
   - {fileID: 712567829}
   - {fileID: 1156483869}
   m_Father: {fileID: 0}
@@ -8533,6 +8592,7 @@ GameObject:
   - component: {fileID: 1637084241}
   - component: {fileID: 1637084242}
   - component: {fileID: 1637084243}
+  - component: {fileID: 1637084244}
   m_Layer: 7
   m_Name: Egg
   m_TagString: Player
@@ -8556,7 +8616,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 78b2106791713634aae353fe537938b7, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -8761,6 +8821,7 @@ MonoBehaviour:
   jumpPower: 6
   checkDistance: 0.1
   footOffset: 0.01
+  playerCanMove: 1
 --- !u!95 &1637084241
 Animator:
   serializedVersion: 7
@@ -8795,9 +8856,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5ea1e9d181e094c95f3f2f582634dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHP: 2
+  maxHP: 20
   invincibleTime: 0.2
   knockbackForce: 5
+  deadParticlePrefab: {fileID: 5051701023158010214, guid: 913dcf71c5d238f42a72d4b479f3c20c, type: 3}
 --- !u!114 &1637084243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8811,6 +8873,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFallChecker
   deathY: -10
+  deadParticlePrefab: {fileID: 5051701023158010214, guid: 913dcf71c5d238f42a72d4b479f3c20c, type: 3}
+--- !u!114 &1637084244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637084230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8c8378e83613da48a348811b94f199c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerKickAttack
+  kickRange: 1.2
+  kickHeight: 0.8
+  kickForce: 10
+  cooldown: 1
+  kickEffectPrefab: {fileID: 2368203387719750372, guid: 63451196c3f9f474a94819f39528d523, type: 3}
 --- !u!1 &1687453404
 GameObject:
   m_ObjectHideFlags: 0

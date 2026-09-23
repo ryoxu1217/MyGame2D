@@ -163,7 +163,11 @@ public class HomingWithPatrol : MonoBehaviour
         if (Mathf.Abs(vx) > 0.01f) lastTargetIsRight = vx > 0f;
         sr.flipX = !lastTargetIsRight;
 
-        rb.linearVelocity = new Vector2(vx, rb.linearVelocity.y);
+        rb.linearVelocity = Vector2.Lerp(
+            rb.linearVelocity,
+            new Vector2(vx, rb.linearVelocity.y),
+            0.2f
+        );
     }
 
     private void DoHoming()
@@ -221,7 +225,11 @@ public class HomingWithPatrol : MonoBehaviour
             }
         }
 
-        rb.linearVelocity = new Vector2(moveX, moveY);
+        rb.linearVelocity = Vector2.Lerp(
+        rb.linearVelocity,
+        new Vector2(moveX, moveY),
+        0.2f
+        );
     }
 
     void OnDrawGizmosSelected()

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class PlayerHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private int maxHP = 20;     // 最大HP
     public int MaxHP => maxHP;  // maxHPの値を常に示す読み取り用変数
