@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,16 +11,16 @@ public class GameManager : MonoBehaviour
     {
         // ゲーム中に1つだけ存在する GameManager を登録
         Instance = this;
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public void OnPlayerDead()
     {
-        DeathSystem();
+        GoAndReset(gameoverScene);
     }
 
-    private void DeathSystem()
+    public void GoAndReset(string sceneName)
     {
-        // GAMEOVER シーンへ移動
-        SceneManager.LoadScene(gameoverScene);
+        SceneManager.LoadScene(sceneName);
     }
 }

@@ -21,11 +21,14 @@ MonoBehaviour:
   m_OverrideGlobalSceneList: 1
   m_Scenes:
   - m_enabled: 1
-    m_path: Assets/Scenes/test_stage.unity
-    m_guid: 85a299d2c03ce174384532bbf346727d
-  - m_enabled: 1
     m_path: Assets/Scenes/GameOver.unity
     m_guid: a21cf502edda44e48a5840e921efc9a4
+  - m_enabled: 1
+    m_path: Assets/Scenes/GameClear.unity
+    m_guid: 224d68d28fea877468c4f2a85cf00ce1
+  - m_enabled: 1
+    m_path: Assets/Scenes/Level1.unity
+    m_guid: 85a299d2c03ce174384532bbf346727d
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
@@ -42,7 +45,7 @@ MonoBehaviour:
     - line: '|   useOnDemandResources: 0'
     - line: '|   accelerometerFrequency: 60'
     - line: '|   companyName: DefaultCompany'
-    - line: '|   productName: MyGame2D'
+    - line: '|   productName: ''MyGame2D '''
     - line: '|   defaultCursor: {instanceID: 0}'
     - line: '|   cursorHotspot: {x: 0, y: 0}'
     - line: '|   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b:
@@ -174,7 +177,11 @@ MonoBehaviour:
     - line: '|   visionOSBundleVersion: 1.0'
     - line: '|   tvOSBundleVersion: 1.0'
     - line: '|   bundleVersion: 1.0'
-    - line: '|   preloadedAssets: []'
+    - line: '|   preloadedAssets:'
+    - line: '|   - {fileID: 11400000, guid: 67e71cd46d98dab43891c5d92e355c53, type:
+        2}'
+    - line: '|   - {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100,
+        type: 3}'
     - line: '|   metroInputSource: 0'
     - line: '|   wsaTransparentSwapchain: 0'
     - line: '|   xboxOneDisableKinectGpuReservation: 1'
@@ -715,6 +722,7 @@ MonoBehaviour:
     - line: '|   captureStartupLogs: {}'
     - line: '|   activeInputHandler: 1'
     - line: '|   windowsGamepadBackendHint: 0'
+    - line: '|   enableDirectStorage: 0'
     - line: '|   cloudProjectId: ed69d228-9623-474d-b893-b3099ba35f7c'
     - line: '|   framebufferDepthMemorylessMode: 0'
     - line: '|   qualitySettingsNames: []'

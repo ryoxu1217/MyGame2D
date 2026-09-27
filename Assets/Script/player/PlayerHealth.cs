@@ -8,15 +8,13 @@ public class PlayerHealth : MonoBehaviour
     public int MaxHP => maxHP;  // maxHPの値を常に示す読み取り用変数
     public int CurrentHP { get; private set; }  // 書き換えれないが、値を使うことはできる
 
-    [SerializeField] private float invincibleTime = 0.1f; // 無敵時間（秒）
-    private bool isInvincible = false; // 無敵状態かどうか
+    [SerializeField] private float invincibleTime = 0.5f; // 無敵時間（秒）
+    public bool isInvincible { get; private set; } = false; // 無敵状態かどうか
 
     [SerializeField] private float knockbackForce = 1f;     // ノックバック強さ
 
     [SerializeField] private GameObject deadParticlePrefab; // 死エフェクト
 
-    private Rigidbody2D rb;
-    private PlayerMove pm;
     private Animator anim;
 
     private bool isDead = false;
@@ -25,24 +23,7 @@ public class PlayerHealth : MonoBehaviour
     {
         CurrentHP = maxHP;
         anim = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
-        pm = GetComponent<PlayerMove>();
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        int enemyLayer = LayerMask.NameToLayer("Enemy");
-
-        if (collision.gameObject.layer == enemyLayer)
-        {
-            TakeDamage(1);
-
-            // ノックバック発生
-            Vector2 direction = (transform.position - collision.transform.position).normalized;
-            rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
-        }
-    }
-
 
     public void TakeDamage(int damage)
     {
@@ -66,12 +47,12 @@ public class PlayerHealth : MonoBehaviour
     private IEnumerator InvincibleCoroutine()
     {
         isInvincible = true;
-        anim.SetBool("isDamage", true); // ← アニメーション開始
+        anim.SetBool("isDamage", true); // アニメーション開始
 
         yield return new WaitForSeconds(invincibleTime);
 
         isInvincible = false;
-        anim.SetBool("isDamage", false); // ← アニメーション終了
+        anim.SetBool("isDamage", false); // アニメーション終了
     }
 
     private void GameOver()
@@ -79,10 +60,6 @@ public class PlayerHealth : MonoBehaviour
         // 死んだ
         isDead = true;
 
-        // 移動を禁ずる
-        pm.playerCanMove = false;
-        rb.linearVelocity = Vector2.zero;  // 速度ゼロ
-        rb.constraints = RigidbodyConstraints2D.FreezePosition; // 位置固定
         gameObject.SetActive(false);
 
         Vector3 pos = transform.position;

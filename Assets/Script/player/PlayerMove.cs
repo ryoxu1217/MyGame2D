@@ -5,17 +5,17 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 5f;
-    public float jumpPower = 6f;
     [SerializeField] private float checkDistance = 0.05f;
     [SerializeField] private float footOffset = 0.01f;
 
-    public bool playerCanMove = true;
+    public bool isCanMove = true;
+    public bool isCanWalk = true;
 
     private Rigidbody2D rb;
     private Collider2D col;
     private SpriteRenderer sr;
     private Animator anim;
+    private PlayerStatus ps;
 
     private Vector2 moveInput = Vector2.zero;
     private bool jumpRequested = false;
@@ -30,13 +30,11 @@ public class PlayerMove : MonoBehaviour
         col = GetComponent<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        ps = GetComponent<PlayerStatus>();
     }
 
     public void OnMove(InputValue value)
     {
-        // 操作可能かどうか判定
-        if (!playerCanMove) return;
-
         moveInput = value.Get<Vector2>();
 
         // 左右向き
@@ -60,10 +58,7 @@ public class PlayerMove : MonoBehaviour
     }
 
     void Update()
-    {
-        // 操作可能かどうか判定
-        if (!playerCanMove) return;
-        
+    { 
         // 地面判定
         float myHeight = col.bounds.extents.y;
         float footy = transform.position.y - myHeight - footOffset;
@@ -85,23 +80,27 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 操作可能かどうか判定
-        if (!playerCanMove) return;
- 
-        // 水平移動
-        if (moveInput.x != 0)
+        if (isCanWalk)
         {
-            float vx = moveInput.x * speed;
-            rb.linearVelocity = new Vector2(vx, rb.linearVelocity.y);
-        }
+            // 水平移動
+            float targetVx = moveInput.x * ps.speed;
+
+            rb.linearVelocity = Vector2.Lerp(
+                rb.linearVelocity,
+                new Vector2(targetVx, rb.linearVelocity.y),
+                0.2f
+            );
+        }    
 
         // ジャンプ処理
         if (jumpRequested)
         {
             jumpRequested = false;
             isJumping = true;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); 
-            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            Vector2 vel = rb.linearVelocity;
+            vel.y = 0;
+            rb.linearVelocity = vel;
+            rb.AddForce(Vector2.up * ps.jumpPower, ForceMode2D.Impulse);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class HealthController : MonoBehaviour
 {
     public Image healthGaugeImage;
-   public PlayerHealth playerHealth; 
+    public PlayerHealth playerHealth; 
 
     private void Update()
     {

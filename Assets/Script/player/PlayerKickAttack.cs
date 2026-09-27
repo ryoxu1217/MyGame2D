@@ -1,80 +1,102 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class KickAttack : MonoBehaviour
+public class PlayerKickAttack : MonoBehaviour
 {
-    [Header("Kick Settings")]
-    public float kickRange = 1.2f;
-    public float kickHeight = 0.8f;
+    [SerializeReference] private float kickRange = 1.2f;
+    [SerializeReference] private float kickHeight = 1.2f;
     public float kickForce = 10f;
     public float cooldown = 1.0f;
+    public bool isCooldown{get; private set;} = false;
+    public float cooldownTimer{get; private set;} = 0f;
 
-    [Header("Effects")]
-    public GameObject kickEffectPrefab;   // ← パーティクルプレハブ
 
-    private bool canKick = true;
+    public GameObject kickParticlePrefab;
+    private PlayerRollingAttack pra;
     private SpriteRenderer sr;
     private Animator anim;
+    private PlayerStatus ps;
+
+    private int enemyLayer;
 
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        pra = GetComponent<PlayerRollingAttack>();
+        ps = GetComponent<PlayerStatus>();
+        enemyLayer = LayerMask.GetMask("Enemy");
+    }
+
+    void Update()
+    {
+        // クールダウン中ならタイマーを減らす
+        if (isCooldown)
+        {
+            cooldownTimer -= Time.deltaTime;
+            if (cooldownTimer <= 0f)
+            {
+                cooldownTimer = 0f;
+                isCooldown = false;
+            }
+        }
     }
 
     public void OnKick(InputValue value)
     {
-        if (!canKick) return;
-        PerformKick();
+        if (!isCooldown && !pra.isRolling)    // 蹴れる状態なら
+            PerformKick();
     }
 
     private void PerformKick()
     {
-        canKick = false;
+        isCooldown = true;
+        cooldownTimer = cooldown;    // cooltime発動
 
-        float dir = sr.flipX ? -1f : 1f;
+        float dir = sr.flipX ? -1f : 1f;    // 向きから攻撃方法を確認
 
-        // animation再生
-        anim.SetTrigger("AttackTriggr"); 
-        
+        // アニメ再生
+        anim.SetTrigger("KickTriggr");    // アタックアニメーションを再生
+
         // 判定位置
         Vector2 center = new Vector2(
-            transform.position.x + dir * (kickRange * 0.5f),
-            transform.position.y + kickHeight * 0.5f
+            transform.position.x + dir * (kickRange * 0.8f),
+            transform.position.y + kickHeight * 0.05f
         );
 
         Vector2 size = new Vector2(kickRange, kickHeight);
-
-        // 敵判定
-        Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0f, LayerMask.GetMask("Enemy"));
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0f, enemyLayer);
 
         foreach (var hit in hits)
         {
-            Rigidbody2D er = hit.GetComponent<Rigidbody2D>();
-
-            if (er != null)
+            // Rigidbody2Dを取得
+            if (hit.TryGetComponent(out Rigidbody2D er))
             {
-                Vector2 force = new Vector2(dir * kickForce, kickForce * 0.7f);
+                // ノックバック
+                Vector2 force = new Vector2(dir * kickForce, kickForce * 0.2f);
                 er.AddForce(force, ForceMode2D.Impulse);
+            }
 
-                    // EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
-                    // if (enemy != null)
-                    // {
-                    //     enemy.TakeDamage(1);
-                    // }
+            // TryGetComponentというのはちょっと処理の軽いGetComponentみたいなヤツ
+            if (hit.TryGetComponent(out EnemyHealth enemy))
+            {
+                enemy.TakeDamage(ps.AttackDamage);
             }
         }
 
-        // パーティクル発生
-        SpawnKickEffect(dir);
-
-        // クールダウン
-        StartCoroutine(KickCooldown());
+        StartCoroutine(DelayedKickParticle(dir, 0.1f));
     }
 
-    private void SpawnKickEffect(float dir)
+    
+    private System.Collections.IEnumerator DelayedKickParticle(float dir, float delay)
     {
-        if (kickEffectPrefab == null) return;
+        yield return new WaitForSeconds(delay);
+        SpawnKickParticle(dir);
+    }
+    private void SpawnKickParticle(float dir)
+    {
+        if (kickParticlePrefab == null) return;
 
         Vector3 pos = new Vector3(
             transform.position.x + dir * 0.6f,
@@ -82,13 +104,7 @@ public class KickAttack : MonoBehaviour
             -1f
         );
 
-        Instantiate(kickEffectPrefab, pos, Quaternion.identity);
-    }
-
-    private System.Collections.IEnumerator KickCooldown()
-    {
-        yield return new WaitForSeconds(cooldown);
-        canKick = true;
+        Instantiate(kickParticlePrefab, pos, Quaternion.identity);
     }
 
     private void OnDrawGizmosSelected()
@@ -98,8 +114,8 @@ public class KickAttack : MonoBehaviour
         float dir = sr.flipX ? -1f : 1f;
 
         Vector2 center = new Vector2(
-            transform.position.x + dir * (kickRange * 0.5f),
-            transform.position.y + kickHeight * 0.5f
+            transform.position.x + dir * (kickRange * 0.8f),
+            transform.position.y + kickHeight * 0.05f
         );
 
         Vector2 size = new Vector2(kickRange, kickHeight);
