@@ -1,28 +1,33 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class KeyPressToRestart : MonoBehaviour
 {
-    [SerializeField] private InputAction changeKey;
     [SerializeField] private string scene;
+    [SerializeField] private InputActionReference changeKeyRef;   // ← 安定版
+    private FadeController fc;
 
+    private void Awake()
+    {
+        fc = FindAnyObjectByType<FadeController>();
+    }
 
     private void OnEnable()
     {
-        changeKey.Enable();
-        changeKey.performed += OnKeyPressed;
+        changeKeyRef.action.Enable();
+        changeKeyRef.action.performed += OnKeyPressed;
     }
 
     private void OnDisable()
     {
-        changeKey.performed -= OnKeyPressed;
-        changeKey.Disable();
+        changeKeyRef.action.performed -= OnKeyPressed;
+        changeKeyRef.action.Disable();
     }
 
     private void OnKeyPressed(InputAction.CallbackContext ctx)
     {
-        GameManager.Instance.GoAndReset(scene);
-    }
+        if (fc.IsFading) return;
 
+        fc.StartFadeToClearScene(scene, Color.black, 1f);
+    }
 }

@@ -2,11 +2,20 @@ using UnityEngine;
 
 public class ExplosionParticleEnd : MonoBehaviour
 {
+    [SerializeField] private string gameOverScene = "GameOver";
+    private FadeController fc;
+    
+    private void Awake()
+    {
+        // FadeControllerを探す
+        fc = FindAnyObjectByType<FadeController>();
+    }
+
     private void OnParticleSystemStopped()
     {
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.OnPlayerDead();
+            fc.StartFadeToClearScene(gameOverScene, Color.black, 0.5f);
         }
         else
         {

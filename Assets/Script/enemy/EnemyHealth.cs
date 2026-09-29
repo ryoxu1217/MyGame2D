@@ -10,13 +10,16 @@ public class EnemyHealth : MonoBehaviour
     public bool isInvincible { get; private set; } = false;
     [SerializeField] private GameObject deadParticlePrefab;
 
+    private bool isDead;
     private PlayerStatus ps;
+    private EnemyStatus es;
     private Animator anim;
 
     private void Start()
     {
         CurrentHP = maxHP;
         anim = GetComponent<Animator>();
+        es = GetComponent<EnemyStatus>();
 
         // プレイヤーを Layer で探す（安全版）
         int playerLayer = LayerMask.GetMask("Player");
@@ -34,7 +37,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (isInvincible || ps == null) return;
+        if (isInvincible || ps == null || isDead) return;
 
         CurrentHP -= damage;
         CurrentHP = Mathf.Clamp(CurrentHP, 0, maxHP);
@@ -64,9 +67,11 @@ public class EnemyHealth : MonoBehaviour
 
     private void EnemyDead()
     {
+        if (isDead) return;
+        isDead = true;
         if (ps != null)
         {
-            ps.TakeEXP(5);
+            ps.TakeEXP(es.haveEXP);
         }
         else
         {

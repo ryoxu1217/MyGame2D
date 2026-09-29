@@ -6,7 +6,7 @@ public class FinalObstacle : MonoBehaviour
 {
     [SerializeField] private GameObject BreakParticlePrefab;
 
-    private PlayerStatus ps;
+    [SerializeField] private PlayerStatus ps;
 
     public void TakeBreak()
     {

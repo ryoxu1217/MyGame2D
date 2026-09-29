@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -79,9 +80,11 @@ public class PlayerKickAttack : MonoBehaviour
             }
 
             // TryGetComponentというのはちょっと処理の軽いGetComponentみたいなヤツ
-            if (hit.TryGetComponent(out EnemyHealth enemy))
+            if (hit.TryGetComponent(out EnemyHealth eh))
             {
-                enemy.TakeDamage(ps.AttackDamage);
+                eh.TakeDamage(ps.AttackDamage);
+            } else if (hit.TryGetComponent(out FinalObstacle fo)) {
+                fo.TakeBreak();
             }
         }
 

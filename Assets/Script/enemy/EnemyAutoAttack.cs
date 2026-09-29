@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class EnemyAutoAttack : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class EnemyAutoAttack : MonoBehaviour
     [SerializeField] private float cooldown = 1.5f;
     [SerializeField] private float ParticleDelay;
     [SerializeField] private GameObject attackParticlePrefab;
+    [Header("Special")]
+    [SerializeField] private bool dashBeforeAttack = false;   // 攻撃前に前進するか
+    [SerializeField] private float dashBoost = 1.0f;
+    [SerializeField] private float dashTime = 0.1f;           // 前進する時間
 
     private bool isCooldown = false;
     private float cooldownTimer = 0f;
@@ -65,6 +70,39 @@ public class EnemyAutoAttack : MonoBehaviour
     }
 
     private void PerformAttack(float dir, Collider2D[] hits)
+    {
+        isCooldown = true;
+        cooldownTimer = cooldown;
+
+        // 攻撃前ダッシュが必要ならコルーチンで処理
+        if (dashBeforeAttack)
+        {
+            StartCoroutine(DashAndAttack(dir, hits));
+        }
+        else
+        {
+            DoAttack(dir, hits);
+        }
+    }
+
+    private IEnumerator DashAndAttack(float dir, Collider2D[] hits)
+    {
+        float timer = dashTime;
+
+        // 前進（ダッシュ）
+        while (timer > 0f)
+        {
+            timer -= Time.deltaTime;
+            transform.Translate(new Vector2(dir * (es.homingSpeed * 2 * dashBoost) * Time.deltaTime, 0f));
+            yield return null;
+        }
+
+        // ダッシュ後に攻撃処理
+        DoAttack(dir, hits);
+    }
+
+
+    private void DoAttack(float dir, Collider2D[] hits)
     {
         isCooldown = true;
         cooldownTimer = cooldown;

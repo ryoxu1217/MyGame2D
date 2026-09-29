@@ -11,8 +11,6 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float invincibleTime = 0.5f; // 無敵時間（秒）
     public bool isInvincible { get; private set; } = false; // 無敵状態かどうか
 
-    [SerializeField] private float knockbackForce = 1f;     // ノックバック強さ
-
     [SerializeField] private GameObject deadParticlePrefab; // 死エフェクト
 
     private Animator anim;
@@ -41,7 +39,16 @@ public class PlayerHealth : MonoBehaviour
         } else {
             StartCoroutine(InvincibleCoroutine()); // 無敵時間開始
         }
+    }
 
+    public void TakeHeal(int heal)
+    {
+        if (isDead) return; // 死亡中ならダメージ無効
+
+        CurrentHP += heal;
+        CurrentHP = Mathf.Clamp(CurrentHP, 0, maxHP);
+
+        Debug.Log("現在のHP: " + CurrentHP);
     }
 
     private IEnumerator InvincibleCoroutine()

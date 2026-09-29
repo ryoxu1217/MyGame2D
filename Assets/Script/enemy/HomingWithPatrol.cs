@@ -12,13 +12,11 @@ public class HomingWithPatrol : MonoBehaviour
 
     [Header("Patrol")]
     [SerializeField] private Transform[] waypoints;
-    [SerializeField] private float patrolSpeed = 2f;    // パトロール速度
     [SerializeField] private float waypointReachThreshold = 0.2f;   //　ウェイポイント到達判定距離
     [SerializeField] private bool loopWaypoints = true;     // ウェイポイントを全て行き終わってからループするか
 
     [Header("Homing")]
-    [SerializeField] private float homingSpeed = 3f;    // ホーミング速度
-    [SerializeField] private float climbSpeed = 2f;     // さかのぼり速度
+    [SerializeField] private float climbSpeed = 4f;     // さかのぼり速度
     [SerializeField] private float detectionRange = 5f;     // ターゲット補足範囲
     [SerializeField] private float loseRange = 7f;  // ターゲットを見失う範囲（detectionRangeより必ず大きく）
     [SerializeField] private float flipDeadzone = 0.15f;
@@ -34,6 +32,7 @@ public class HomingWithPatrol : MonoBehaviour
     private SpriteRenderer sr;      // スプライト描画
     private Animator anim;      // アニメーション
     private EnemyHealth eh;
+    private EnemyStatus es;
     private State state = State.Patrol;     // ステート
     private int currentWaypoint = 0;    // 巡回位置
     private Vector2 randomDir = Vector2.right;
@@ -52,6 +51,7 @@ public class HomingWithPatrol : MonoBehaviour
         anim = GetComponent<Animator>();
         anim.SetBool("isWalk", true);
         eh = GetComponent<EnemyHealth>();
+        es = GetComponent<EnemyStatus>();
     }
 
     void Start()
@@ -124,7 +124,7 @@ public class HomingWithPatrol : MonoBehaviour
             state = State.Homing;
 
             rb.linearVelocity = new Vector2(
-                lastTargetIsRight ? homingSpeed : -homingSpeed,
+                lastTargetIsRight ? es.homingSpeed : -es.homingSpeed,
                 rb.linearVelocity.y
             );
         }
@@ -148,7 +148,7 @@ public class HomingWithPatrol : MonoBehaviour
             }
             else
             {
-                vx = dir.normalized.x * patrolSpeed;
+                vx = dir.normalized.x * es.patrolSpeed;
             }
         }
         else    //ウェイポイントがなければ
@@ -159,7 +159,7 @@ public class HomingWithPatrol : MonoBehaviour
                 randomDir = Random.value > 0.5f ? Vector2.right : Vector2.left;
                 randomMoveTimer = randomMoveInterval;
             }
-            vx = randomDir.x * patrolSpeed;
+            vx = randomDir.x * es.patrolSpeed;
         }
 
         if (Mathf.Abs(vx) > 0.01f) lastTargetIsRight = vx > 0f;
@@ -197,7 +197,7 @@ public class HomingWithPatrol : MonoBehaviour
 
             sr.flipX = !lastTargetIsRight;
 
-            moveX = lastTargetIsRight ? homingSpeed : -homingSpeed;
+            moveX = lastTargetIsRight ? es.homingSpeed : -es.homingSpeed;
             Vector2 dir = lastTargetIsRight ? Vector2.right : Vector2.left;
 
             // 段差判定

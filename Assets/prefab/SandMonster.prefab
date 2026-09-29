@@ -389,10 +389,8 @@ MonoBehaviour:
   target: {fileID: 0}
   targetTag: Player
   waypoints: []
-  patrolSpeed: 2
   waypointReachThreshold: 0.2
   loopWaypoints: 1
-  homingSpeed: 3.5
   climbSpeed: 2
   detectionRange: 5
   loseRange: 7
@@ -414,9 +412,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a7b87db45ae364d8a4dedb54c8f1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHP: 6
+  maxHP: 5
   invincibleTime: 0.5
-  knockbackForce: 1
   deadParticlePrefab: {fileID: 5051701023158010214, guid: d5c03af265b991f48a65c6789384778b, type: 3}
 --- !u!114 &8550293148530710162
 MonoBehaviour:
@@ -430,10 +427,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310ad4b021c3edf41b710126cd71c9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStatus
-  haveEXP: 1
+  haveEXP: 10
   AttackDamage: 1
-  patrolSpeed: 5
-  skillBaseCooldown: 1
+  patrolSpeed: 2.5
+  homingSpeed: 4.5
 --- !u!114 &4956567505875798022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -452,6 +449,9 @@ MonoBehaviour:
   cooldown: 1.5
   ParticleDelay: 0.2
   attackParticlePrefab: {fileID: 2368203387719750372, guid: a32734be6ac4be34a984beba5dc478d7, type: 3}
+  dashBeforeAttack: 0
+  dashBoost: 1
+  dashTime: 0.1
 --- !u!114 &4307370919757161260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,4 +585,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealthController
   healthGaugeImageMain: {fileID: 5024302826880363825}
   healthGaugeImageBack: {fileID: 2180292998245480434}
+  isAlwaysShown: 0
   eh: {fileID: 976468950280037995}

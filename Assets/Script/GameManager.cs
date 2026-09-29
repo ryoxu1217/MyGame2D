@@ -5,22 +5,33 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public string gameoverScene;
+    public float gameTimer {get; private set;}
 
     private void Awake()
     {
-        // ゲーム中に1つだけ存在する GameManager を登録
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);   // 既にあるなら自分を消す
+            return;
+        };
+
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
+
+        gameTimer = 0.0f;
     }
 
-    public void OnPlayerDead()
+    void Update()
     {
-        GoAndReset(gameoverScene);
+        if (SceneManager.GetActiveScene().name.StartsWith("Level"))
+        {
+            gameTimer += Time.deltaTime;
+        }
     }
 
-    public void GoAndReset(string sceneName)
+    public void GoToScene(string sceneName)
     {
+        if (sceneName.StartsWith("Level")) gameTimer = 0.0f;
         SceneManager.LoadScene(sceneName);
     }
 }

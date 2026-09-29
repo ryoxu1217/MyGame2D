@@ -22,6 +22,11 @@ public class PlayerRollingAttack : MonoBehaviour
     // タイマー
     private float damageTimer = 0f;
     public float cooldownTimer{get; private set;} = 0f;
+
+    // 段差のぼり
+    [SerializeField] private float forwardDist = 0.8f;
+    [SerializeField] private float stepMaxHeight = 0.4f;
+    [SerializeField] private float climbSpeed = 6f;
     // 参照
     private SpriteRenderer sr;
     private Rigidbody2D rb;
@@ -80,7 +85,9 @@ public class PlayerRollingAttack : MonoBehaviour
             rollTimer -= Time.deltaTime;
 
             float targetX = dir * (ps.speed * 2 - ps.speed / 3);
-    ;
+
+            ApplyStepClimb(dir);
+
             rb.linearVelocity = Vector2.Lerp(
                 rb.linearVelocity,
                 new Vector2(targetX, rb.linearVelocity.y),
@@ -134,6 +141,42 @@ public class PlayerRollingAttack : MonoBehaviour
                 Vector2 force = new Vector2(dir * knockbackForce, knockbackForce * 0.2f);
                 er.AddForce(force, ForceMode2D.Impulse);
             }
+        }
+    }
+    private void ApplyStepClimb(float dir)
+    {
+        // 足元から前方に障害物検出
+        Vector2 footOrigin = (Vector2)transform.position + Vector2.down * 0.2f;
+
+        RaycastHit2D forwardHit = Physics2D.Raycast(
+            footOrigin,
+            dir > 0 ? Vector2.right : Vector2.left,
+            forwardDist,
+            LayerMask.GetMask("Ground")
+        );
+
+        if (forwardHit.collider == null) return;
+
+        // 障害物の上に足場があるか確認
+        Vector2 topCheckOrigin = forwardHit.point + Vector2.up * stepMaxHeight;
+
+        RaycastHit2D topHit = Physics2D.Raycast(
+            topCheckOrigin,
+            Vector2.down,
+            stepMaxHeight + 0.1f,
+            LayerMask.GetMask("Ground")
+        );
+
+        if (topHit.collider == null) return;
+
+        float topY = topHit.point.y;
+        float myFootY = transform.position.y - 0.1f;
+        float heightDiff = topY - myFootY;
+
+        if (heightDiff > 0f && heightDiff <= stepMaxHeight)
+        {
+            // ローリング中の段差登り速度
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, climbSpeed);
         }
     }
 }

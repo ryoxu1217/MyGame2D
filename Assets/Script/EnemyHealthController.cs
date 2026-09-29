@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class EnemyHealthController : MonoBehaviour
 {
-    public Image healthGaugeImageMain;
-    public Image healthGaugeImageBack;
-    public EnemyHealth eh; 
+    [SerializeField] private Image healthGaugeImageMain;
+    [SerializeField] private Image healthGaugeImageBack;
+    [SerializeField] private bool isAlwaysShown = false;
+    [SerializeField] private EnemyHealth eh; 
 
     private void Update()
     {
@@ -17,15 +18,21 @@ public class EnemyHealthController : MonoBehaviour
         float ratio = (float)eh.CurrentHP / eh.MaxHP;
         healthGaugeImageMain.fillAmount = ratio;
 
-        if (eh.isInvincible)
+        if (isAlwaysShown)
         {
             healthGaugeImageMain.enabled = true;
             healthGaugeImageBack.enabled = true;
-        }
-        else
-        {
-            healthGaugeImageMain.enabled = false;
-            healthGaugeImageBack.enabled = false;
+        } else {
+            if (eh.isInvincible)
+            {
+                healthGaugeImageMain.enabled = true;
+                healthGaugeImageBack.enabled = true;
+            }
+            else
+            {
+                healthGaugeImageMain.enabled = false;
+                healthGaugeImageBack.enabled = false;
+            }
         }
     }
 }

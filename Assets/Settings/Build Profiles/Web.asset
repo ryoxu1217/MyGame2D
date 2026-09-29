@@ -24,14 +24,17 @@ MonoBehaviour:
     m_path: Assets/Scenes/Title.unity
     m_guid: 0dec6c3dea05d1d4fad44b66e86836e5
   - m_enabled: 1
+    m_path: Assets/Scenes/Tutorial.unity
+    m_guid: 895cf615f3c51a242ab55a203edbdf20
+  - m_enabled: 1
     m_path: Assets/Scenes/Level1.unity
     m_guid: 85a299d2c03ce174384532bbf346727d
   - m_enabled: 1
-    m_path: Assets/Scenes/GameClear.unity
-    m_guid: 224d68d28fea877468c4f2a85cf00ce1
-  - m_enabled: 1
     m_path: Assets/Scenes/GameOver.unity
     m_guid: a21cf502edda44e48a5840e921efc9a4
+  - m_enabled: 1
+    m_path: Assets/Scenes/GameClear.unity
+    m_guid: 224d68d28fea877468c4f2a85cf00ce1
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
