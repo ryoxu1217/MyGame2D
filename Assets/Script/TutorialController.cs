@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class TutorialController : MonoBehaviour
 {
-    [SerializeField] private InputAction nextAction;
+    [SerializeField] private InputActionReference nextActionRef;
     [SerializeField] private SpriteRenderer targetSprite;   // ← 変更したいオブジェクト
     [SerializeField] private Sprite[] tutorialSprites;      // Tutorial1〜Tutorial7 を入れる
 
@@ -31,14 +31,20 @@ public class TutorialController : MonoBehaviour
     
     private void OnEnable()
     {
-        nextAction.Enable();
-        nextAction.performed += OnNext;
+        if (nextActionRef != null)
+        {
+            nextActionRef.action.Enable();
+            nextActionRef.action.performed += OnNext;
+        }
     }
 
     private void OnDisable()
     {
-        nextAction.performed -= OnNext;
-        nextAction.Disable();
+        if (nextActionRef != null)
+        {
+            nextActionRef.action.performed -= OnNext;
+            nextActionRef.action.Disable();
+        }
     }
 
     private void OnNext(InputAction.CallbackContext ctx)

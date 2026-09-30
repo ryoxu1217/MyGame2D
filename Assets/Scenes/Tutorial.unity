@@ -844,23 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d0e807725af7394cb41a3d68e2451ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialController
-  nextAction:
-    m_Name: Next
-    m_Type: 1
-    m_ExpectedControlType: Button
-    m_Id: a99bcc14-27ec-481e-bd4e-7c6950c1155d
-    m_Processors: 
-    m_Interactions: Tap(duration=Infinity)
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: 7378b95c-de53-4534-9ea5-c2cdbf31e8bc
-      m_Path: <Keyboard>/z
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Next
-      m_Flags: 0
-    m_Flags: 0
+  nextActionRef: {fileID: -8513333352242723605, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   targetSprite: {fileID: 1125657165}
   tutorialSprites:
   - {fileID: 21300000, guid: 037b00e22542cf743b9d582bbd877fb0, type: 3}
